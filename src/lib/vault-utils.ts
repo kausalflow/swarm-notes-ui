@@ -1,6 +1,7 @@
 /**
  * Utility functions for vault entry metadata extraction and formatting.
  */
+import { resolvePath } from './utils';
 
 /** Format a date from the CSL issued.date-parts array [[YYYY, M, D]] */
 export function formatIssuedDate(issued: any): string | null {
@@ -50,7 +51,7 @@ export function enrichVaultEntry(entry: any) {
 
   return {
     title: data?.title || parts[parts.length - 1],
-    href: `/${realSlug}/`,
+    href: resolvePath(realSlug + '/'),
     section,
     sortTimestamp: getMostRecentTimestamp(entry),
     // Paper fields

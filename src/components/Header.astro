@@ -13,6 +13,7 @@
  */
 import ThemeToggle from './ThemeToggle.astro';
 import Logo from './Logo.astro';
+import { resolvePath } from '@/lib/utils';
 
 interface Props {
   /** Layout variant - boxed (default) or fullWidth */
@@ -22,11 +23,11 @@ interface Props {
 const { variant = 'boxed' } = Astro.props;
 
 const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/catalog/concepts/', label: 'Concepts' },
-  { href: '/catalog/open-questions/', label: 'Open Questions' },
-  { href: '/catalog/discussions/', label: 'Discussions' },
-  { href: '/catalog/papers/', label: 'Papers' },
+  { href: resolvePath('/'), label: 'Home' },
+  { href: resolvePath('catalog/concepts/'), label: 'Concepts' },
+  { href: resolvePath('catalog/open-questions/'), label: 'Open Questions' },
+  { href: resolvePath('catalog/discussions/'), label: 'Discussions' },
+  { href: resolvePath('catalog/papers/'), label: 'Papers' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -91,8 +92,8 @@ const containerClass =
               </div>
             );
           }
-          const isActive = item.href === '/'
-            ? currentPath === '/'
+          const isActive = item.href === resolvePath('/')
+            ? currentPath === resolvePath('/')
             : currentPath.startsWith(item.href);
           return (
             <a
@@ -188,8 +189,8 @@ const containerClass =
               </div>
             );
           }
-          const isActive = item.href === '/'
-            ? currentPath === '/'
+          const isActive = item.href === resolvePath('/')
+            ? currentPath === resolvePath('/')
             : currentPath.startsWith(item.href);
           return (
             <a

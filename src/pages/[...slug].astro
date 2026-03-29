@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import ArticleLayout from "@/layouts/ArticleLayout.astro";
 import fs from 'node:fs';
 import path from 'node:path';
+import { resolvePath } from '@/lib/utils';
 
 export async function getStaticPaths() {
   const allVaultEntries = await getCollection('vault');
@@ -45,7 +46,7 @@ const renderValue = (val: any) => {
     const rawLink = val.replace(/[[\]]/g, '').trim();
     const cleanLink = rawLink.toLowerCase().replace(/ /g, '-');
     const mappedLink = slugToPath[cleanLink] || cleanLink;
-    return `<a href="/${mappedLink}/" class="text-primary hover:underline">${val}</a>`;
+    return `<a href="${resolvePath(mappedLink + '/')}" class="text-primary hover:underline">${val}</a>`;
   }
   return String(val);
 };
@@ -56,7 +57,7 @@ const section = slugParts.length > 1 ? slugParts[0] : null;
 const sectionLabel = section
   ? section.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())
   : null;
-const catalogHref = section ? `/catalog/${section}/` : '/';
+const catalogHref = section ? resolvePath(`catalog/${section}/`) : resolvePath('/');
 
 const HIDDEN_KEYS = new Set([
   'title', 'slug',
@@ -70,7 +71,7 @@ const frontmatter = Object.entries(entry.data || {}).filter(([key]) => !HIDDEN_K
 
 <ArticleLayout title={entry.data?.title || realSlug} description="Vault Entry">
   <div class="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-    <a href="/" class="hover:text-foreground transition-colors">Home</a>
+    <a href={resolvePath('/')} class="hover:text-foreground transition-colors">Home</a>
     {section && (
       <>
         <span>/</span>

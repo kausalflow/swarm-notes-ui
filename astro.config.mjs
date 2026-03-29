@@ -41,6 +41,7 @@ const configuredBase = (!siteConf.base || siteConf.base === '/') ? '' : siteConf
 export default defineConfig({
   site: siteConf.site,
   base: configuredBase || undefined,
+  trailingSlash: siteConf.trailingSlash || 'ignore',
   integrations: [
     react(),
     sitemap({

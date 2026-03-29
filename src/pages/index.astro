@@ -2,6 +2,7 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getCollection } from 'astro:content';
 import { enrichVaultEntry } from "@/lib/vault-utils";
+import { resolvePath } from "@/lib/utils";
 
 const allVaultEntries = await getCollection('vault');
 
@@ -93,7 +94,7 @@ const jsonIndex = JSON.stringify(searchIndex);
     <div class="container max-w-5xl mx-auto px-4 sm:px-6">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold tracking-tight">Recent Discussions</h2>
-        <a href="/catalog/discussions/" class="text-sm text-emerald-600 dark:text-emerald-400 hover:underline">View all →</a>
+        <a href={resolvePath('catalog/discussions/')} class="text-sm text-emerald-600 dark:text-emerald-400 hover:underline">View all →</a>
       </div>
       <div class="grid gap-3">
         {searchIndex
@@ -133,7 +134,7 @@ const jsonIndex = JSON.stringify(searchIndex);
     <div class="container max-w-5xl mx-auto px-4 sm:px-6">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold tracking-tight">Recent Papers</h2>
-        <a href="/catalog/papers/" class="text-sm text-primary hover:underline">View all →</a>
+        <a href={resolvePath('catalog/papers/')} class="text-sm text-primary hover:underline">View all →</a>
       </div>
       <div class="grid gap-3">
         {searchIndex
@@ -195,7 +196,7 @@ const jsonIndex = JSON.stringify(searchIndex);
     <div class="container max-w-5xl mx-auto px-4 sm:px-6">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold tracking-tight">Recent Open Questions</h2>
-        <a href="/catalog/open-questions/" class="text-sm text-primary hover:underline">View all →</a>
+        <a href={resolvePath('catalog/open-questions/')} class="text-sm text-primary hover:underline">View all →</a>
       </div>
       <div class="grid gap-3 sm:grid-cols-2">
         {searchIndex
@@ -261,7 +262,7 @@ const jsonIndex = JSON.stringify(searchIndex);
           const meta = sectionMeta[s] || { label: s, desc: '', icon: '' };
           return (
             <a
-              href={`/catalog/${s}/`}
+              href={resolvePath(`catalog/${s}/`)}
               class="group relative flex flex-col gap-4 rounded-xl border bg-card p-6 shadow-sm hover:border-primary/50 hover:shadow-md transition-all"
             >
               <div class="inline-flex w-fit p-2.5 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
