@@ -45,7 +45,7 @@ const renderValue = (val: any) => {
     const rawLink = val.replace(/[[\]]/g, '').trim();
     const cleanLink = rawLink.toLowerCase().replace(/ /g, '-');
     const mappedLink = slugToPath[cleanLink] || cleanLink;
-    return `<a href="${import.meta.env.BASE_URL}${mappedLink}/" class="text-primary hover:underline">${val}</a>`;
+    return `<a href="/${mappedLink}/" class="text-primary hover:underline">${val}</a>`;
   }
   return String(val);
 };
@@ -70,7 +70,7 @@ const frontmatter = Object.entries(entry.data || {}).filter(([key]) => !HIDDEN_K
 
 <ArticleLayout title={entry.data?.title || realSlug} description="Vault Entry">
   <div class="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-    <a href={import.meta.env.BASE_URL} class="hover:text-foreground transition-colors">Home</a>
+    <a href="/" class="hover:text-foreground transition-colors">Home</a>
     {section && (
       <>
         <span>/</span>
