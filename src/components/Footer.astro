@@ -27,10 +27,10 @@ const containerClass =
       <div>
         <h3 class="text-sm font-semibold mb-3">Vault</h3>
         <ul class="space-y-2 text-sm text-muted-foreground">
-          <li><a href="/catalog/concepts/" class="hover:text-foreground transition-colors">Concepts</a></li>
-          <li><a href="/catalog/open-questions/" class="hover:text-foreground transition-colors">Open Questions</a></li>
-          <li><a href="/catalog/discussions/" class="hover:text-foreground transition-colors">Discussions</a></li>
-          <li><a href="/catalog/papers/" class="hover:text-foreground transition-colors">Papers</a></li>
+          <li><a href={`${import.meta.env.BASE_URL}catalog/concepts/`} class="hover:text-foreground transition-colors">Concepts</a></li>
+          <li><a href={`${import.meta.env.BASE_URL}catalog/open-questions/`} class="hover:text-foreground transition-colors">Open Questions</a></li>
+          <li><a href={`${import.meta.env.BASE_URL}catalog/discussions/`} class="hover:text-foreground transition-colors">Discussions</a></li>
+          <li><a href={`${import.meta.env.BASE_URL}catalog/papers/`} class="hover:text-foreground transition-colors">Papers</a></li>
         </ul>
       </div>
 

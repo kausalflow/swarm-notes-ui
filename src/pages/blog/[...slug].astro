@@ -42,7 +42,7 @@ function formatDate(date: Date) {
   <article class="pb-12">
     <div class="container max-w-3xl mx-auto pt-12 mb-8">
       <a
-        href="/blog"
+        href={`${import.meta.env.BASE_URL}blog`}
         class="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
       >
         <svg
@@ -147,7 +147,7 @@ function formatDate(date: Date) {
           )}
 
           <a
-            href="/blog"
+            href={`${import.meta.env.BASE_URL}blog`}
             class="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
           >
             <svg
