@@ -26,8 +26,21 @@ allFiles.forEach(file => {
   }
 });
 
+let siteConf = { site: 'https://kausalflow.github.io', base: '/' };
+try {
+  const configPath = path.resolve(__dirname, '../configs/site.json');
+  if (fs.existsSync(configPath)) {
+    siteConf = Object.assign(siteConf, JSON.parse(fs.readFileSync(configPath, 'utf8')));
+  }
+} catch (e) {
+  console.warn("Could not read site.json", e);
+}
+
+const configuredBase = (!siteConf.base || siteConf.base === '/') ? '' : siteConf.base.replace(/\/$/, "");
+
 export default defineConfig({
-  site: 'https://kausalflow.github.io',
+  site: siteConf.site,
+  base: configuredBase || undefined,
   integrations: [
     react(),
     sitemap({
@@ -47,7 +60,7 @@ export default defineConfig({
         hrefTemplate: (permalink) => {
           const lower = permalink.toLowerCase();
           const mapped = slugToPath[lower] || permalink;
-          return `/${mapped}/`;
+          return `${configuredBase}/${mapped}/`;
         }
       }]
     ]
