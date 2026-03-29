@@ -1,5 +1,8 @@
 ---
 import Logo from './Logo.astro';
+import { resolvePath } from '@/lib/utils';
+
+const githubUrl = __SITE_CONFIG__.github_url || 'https://github.com/kausalflow/swarm-notes-template';
 
 interface Props {
   variant?: 'boxed' | 'fullWidth';
@@ -27,10 +30,10 @@ const containerClass =
       <div>
         <h3 class="text-sm font-semibold mb-3">Vault</h3>
         <ul class="space-y-2 text-sm text-muted-foreground">
-          <li><a href={`${import.meta.env.BASE_URL}catalog/concepts/`} class="hover:text-foreground transition-colors">Concepts</a></li>
-          <li><a href={`${import.meta.env.BASE_URL}catalog/open-questions/`} class="hover:text-foreground transition-colors">Open Questions</a></li>
-          <li><a href={`${import.meta.env.BASE_URL}catalog/discussions/`} class="hover:text-foreground transition-colors">Discussions</a></li>
-          <li><a href={`${import.meta.env.BASE_URL}catalog/papers/`} class="hover:text-foreground transition-colors">Papers</a></li>
+          <li><a href={resolvePath('catalog/concepts/')} class="hover:text-foreground transition-colors">Concepts</a></li>
+          <li><a href={resolvePath('catalog/open-questions/')} class="hover:text-foreground transition-colors">Open Questions</a></li>
+          <li><a href={resolvePath('catalog/discussions/')} class="hover:text-foreground transition-colors">Discussions</a></li>
+          <li><a href={resolvePath('catalog/papers/')} class="hover:text-foreground transition-colors">Papers</a></li>
         </ul>
       </div>
 
@@ -39,7 +42,7 @@ const containerClass =
         <h3 class="text-sm font-semibold mb-3">Project</h3>
         <ul class="space-y-2 text-sm text-muted-foreground">
           <li>
-            <a href="https://github.com/kausalflow/swarm-notes" target="_blank" rel="noopener noreferrer" class="hover:text-foreground transition-colors">
+            <a href={githubUrl} target="_blank" rel="noopener noreferrer" class="hover:text-foreground transition-colors">
               GitHub
             </a>
           </li>

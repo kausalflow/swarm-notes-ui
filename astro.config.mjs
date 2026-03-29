@@ -52,6 +52,9 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    define: {
+      '__SITE_CONFIG__': JSON.stringify(siteConf)
+    }
   },
   markdown: {
     remarkPlugins: [

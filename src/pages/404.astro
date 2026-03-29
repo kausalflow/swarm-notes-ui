@@ -8,6 +8,9 @@
 import MinimalLayout from "@/layouts/MinimalLayout.astro";
 import Logo from "@/components/Logo.astro";
 import { Button } from "@/components/ui/button";
+import { resolvePath } from "@/lib/utils";
+
+const githubUrl = __SITE_CONFIG__.github_url || 'https://github.com/kausalflow/swarm-notes-template';
 ---
 
 <MinimalLayout
@@ -60,7 +63,7 @@ import { Button } from "@/components/ui/button";
 
       <!-- Help text -->
       <p class="text-sm text-muted-foreground pt-4">
-        If you believe this is an error, please <a href="https://github.com/holger1411/astrodeck/issues" class="text-primary hover:underline">report it on GitHub</a>.
+        If you believe this is an error, please <a href={`${githubUrl}/issues`} class="text-primary hover:underline">report it on GitHub</a>.
       </p>
     </div>
   </div>

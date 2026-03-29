@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
+const githubUrl = __SITE_CONFIG__.github_url || 'https://github.com/kausalflow/swarm-notes-template';
+
 const releases = [
   {
     version: "3.0.5",
@@ -370,7 +372,7 @@ const tagStyles: Record<string, { bg: string; text: string; label: string }> = {
         View the full technical changelog and source code on GitHub.
       </p>
       <a
-        href="https://github.com/holger1411/astrodeck/releases"
+        href={`${githubUrl}/releases`}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center gap-2 justify-center rounded-md bg-primary text-primary-foreground font-medium h-10 px-6 hover:bg-primary/90 transition-colors text-sm"

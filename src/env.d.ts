@@ -5,3 +5,10 @@ interface Window {
   __themeSwapInit?: boolean;
   __themeToggleInit?: boolean;
 }
+
+declare const __SITE_CONFIG__: {
+  site?: string;
+  base?: string;
+  trailingSlash?: string;
+  github_url?: string;
+};
