@@ -293,50 +293,55 @@ const jsonIndex = JSON.stringify(searchIndex);
 <script type="application/json" id="vault-search-data" set:html={jsonIndex}></script>
 
 <script>
-  const rawData = document.getElementById('vault-search-data')?.textContent || '[]';
-  const entries = JSON.parse(rawData);
-  const input = document.getElementById('vault-search');
-  const resultsBox = document.getElementById('search-results');
+  function initSearch() {
+    const rawData = document.getElementById('vault-search-data')?.textContent || '[]';
+    const entries = JSON.parse(rawData);
+    const input = document.getElementById('vault-search') as HTMLInputElement | null;
+    const resultsBox = document.getElementById('search-results');
 
-  function renderResults(query) {
-    if (!query || query.length < 2) {
-      resultsBox.classList.add('hidden');
-      resultsBox.innerHTML = '';
-      return;
+    if (!input || !resultsBox) return;
+
+    function renderResults(query: string) {
+      if (!query || query.length < 2) {
+        resultsBox!.classList.add('hidden');
+        resultsBox!.innerHTML = '';
+        return;
+      }
+      const q = query.toLowerCase();
+      const hits = entries.filter((e: any) =>
+        e.title.toLowerCase().includes(q) || e.section.toLowerCase().includes(q)
+      ).slice(0, 12);
+
+      if (hits.length === 0) {
+        resultsBox!.innerHTML = '<div class="px-4 py-6 text-center text-sm text-muted-foreground">No results found.</div>';
+        resultsBox!.classList.remove('hidden');
+        return;
+      }
+
+      resultsBox!.innerHTML = hits.map((e: any) => `
+        <a href="${e.href}" class="flex items-center gap-3 px-4 py-2.5 hover:bg-muted transition-colors">
+          <span class="text-xs uppercase tracking-wider text-muted-foreground w-24 flex-shrink-0">${e.section.replace(/-/g, ' ')}</span>
+          <span class="text-sm font-medium leading-snug break-words flex-1">${e.title}</span>
+        </a>
+      `).join('');
+      resultsBox!.classList.remove('hidden');
     }
-    const q = query.toLowerCase();
-    const hits = entries.filter(e =>
-      e.title.toLowerCase().includes(q) || e.section.toLowerCase().includes(q)
-    ).slice(0, 12);
 
-    if (hits.length === 0) {
-      resultsBox.innerHTML = '<div class="px-4 py-6 text-center text-sm text-muted-foreground">No results found.</div>';
-      resultsBox.classList.remove('hidden');
-      return;
-    }
+    input.addEventListener('input', e => renderResults((e.target as HTMLInputElement).value));
 
-    resultsBox.innerHTML = hits.map(e => `
-      <a href="${e.href}" class="flex items-center gap-3 px-4 py-2.5 hover:bg-muted transition-colors">
-        <span class="text-xs uppercase tracking-wider text-muted-foreground w-24 flex-shrink-0">${e.section.replace(/-/g, ' ')}</span>
-        <span class="text-sm font-medium leading-snug break-words flex-1">${e.title}</span>
-      </a>
-    `).join('');
-    resultsBox.classList.remove('hidden');
+    document.addEventListener('click', e => {
+      if (!input.contains(e.target as Node) && !resultsBox!.contains(e.target as Node)) {
+        resultsBox!.classList.add('hidden');
+      }
+    });
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        resultsBox!.classList.add('hidden');
+        input.blur();
+      }
+    });
   }
 
-  input?.addEventListener('input', e => renderResults(e.target.value));
-
-  document.addEventListener('click', e => {
-    if (!input?.contains(e.target) && !resultsBox?.contains(e.target)) {
-      resultsBox?.classList.add('hidden');
-    }
-  });
-
-  // Also handle keyboard: Escape closes results
-  input?.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      resultsBox?.classList.add('hidden');
-      input.blur();
-    }
-  });
+  document.addEventListener('astro:page-load', initSearch);
 </script>
