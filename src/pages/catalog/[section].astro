@@ -18,6 +18,9 @@ export async function getStaticPaths() {
     if (parts.length > 1) sections.add(parts[0]);
   });
 
+  // Inject OKF nested entities as sections so their catalog pages are generated
+  ['concepts', 'datasets', 'open-questions'].forEach(s => sections.add(s));
+
   return Array.from(sections).map(section => ({
     params: { section },
     props: { section, allVaultEntries },
@@ -27,10 +30,44 @@ export async function getStaticPaths() {
 const { section, allVaultEntries } = Astro.props;
 
 // Filter and enrich entries for this section
-const entries = allVaultEntries
-  .map(entry => enrichVaultEntry(entry))
-  .filter(e => e.section === section)
-  .sort((a, b) => (b.sortTimestamp || 0) - (a.sortTimestamp || 0));
+let entries: any[] = [];
+
+if (['concepts', 'datasets', 'open-questions'].includes(section)) {
+  const entityKey = section.replace('-', '_'); // open-questions -> open_questions
+  const seen = new Set<string>();
+  
+  allVaultEntries.forEach(entry => {
+    const enriched = enrichVaultEntry(entry);
+    if (enriched.section === 'papers') {
+      const entities = enriched.rawData?.[entityKey];
+      if (Array.isArray(entities)) {
+        entities.forEach(entity => {
+          if (entity.name && !seen.has(entity.name.toLowerCase())) {
+            seen.add(entity.name.toLowerCase());
+            entries.push({
+              title: entity.name,
+              href: enriched.href,
+              section: section,
+              sortTimestamp: enriched.sortTimestamp,
+              rawData: { description: entity.description },
+              tags: enriched.tags,
+              authors: enriched.authors,
+              date: enriched.date,
+              domain: enriched.domain
+            });
+          }
+        });
+      }
+    }
+  });
+  
+  entries.sort((a, b) => (b.sortTimestamp || 0) - (a.sortTimestamp || 0));
+} else {
+  entries = allVaultEntries
+    .map(entry => enrichVaultEntry(entry))
+    .filter(e => e.section === section)
+    .sort((a, b) => (b.sortTimestamp || 0) - (a.sortTimestamp || 0));
+}
 
 const title = section.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase());
 ---

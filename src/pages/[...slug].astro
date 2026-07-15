@@ -104,11 +104,22 @@ const frontmatter = Object.entries(entry.data || {}).filter(([key]) => !HIDDEN_K
               <dt class="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">{key.replace(/-/g, ' ')}</dt>
               <dd class="text-base text-foreground">
                 {Array.isArray(val) ? (
-                  <div class="flex flex-wrap gap-2">
-                    {val.map(v => (
-                       <span class="inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium bg-secondary text-secondary-foreground" set:html={renderValue(v)} />
-                    ))}
-                  </div>
+                  val.length > 0 && typeof val[0] === 'object' && val[0] !== null ? (
+                    <ul class="space-y-3 mt-2">
+                      {val.map(v => (
+                        <li class="rounded-md border bg-card p-3 shadow-sm">
+                          <strong class="block text-foreground mb-1">{v.name || 'Unnamed'}</strong>
+                          {v.description && <span class="text-sm text-muted-foreground leading-relaxed" set:html={renderValue(v.description)} />}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div class="flex flex-wrap gap-2">
+                      {val.map(v => (
+                         <span class="inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium bg-secondary text-secondary-foreground" set:html={renderValue(v)} />
+                      ))}
+                    </div>
+                  )
                 ) : (
                   <span set:html={renderValue(val)} />
                 )}

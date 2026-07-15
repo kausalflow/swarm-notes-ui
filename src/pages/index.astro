@@ -7,9 +7,43 @@ import { resolvePath } from "@/lib/utils";
 const allVaultEntries = await getCollection('vault');
 
 // Build a flat search index of all entries with their real slugs
-const searchIndex = allVaultEntries
-  .map(entry => enrichVaultEntry(entry))
-  .sort((a, b) => b.sortTimestamp - a.sortTimestamp);
+const baseSearchIndex = allVaultEntries
+  .map(entry => enrichVaultEntry(entry));
+
+// Extract nested entities (concepts, datasets, open-questions)
+const syntheticEntries: any[] = [];
+const seenEntities = new Set<string>();
+
+baseSearchIndex.filter(e => e.section === 'papers').forEach(e => {
+  ['concepts', 'datasets', 'open_questions'].forEach(key => {
+    const section = key.replace('_', '-');
+    const entities = e.rawData?.[key];
+    if (Array.isArray(entities)) {
+      entities.forEach(entity => {
+        if (entity.name) {
+          const uniqueId = `${section}:${entity.name.toLowerCase()}`;
+          if (!seenEntities.has(uniqueId)) {
+            seenEntities.add(uniqueId);
+            syntheticEntries.push({
+              title: entity.name,
+              href: e.href,
+              section: section,
+              sortTimestamp: e.sortTimestamp,
+              rawData: { description: entity.description },
+              tags: e.tags,
+              authors: e.authors,
+              date: e.date,
+              domain: e.domain
+            });
+          }
+        }
+      });
+    }
+  });
+});
+
+const searchIndex = [...baseSearchIndex, ...syntheticEntries]
+  .sort((a, b) => (b.sortTimestamp || 0) - (a.sortTimestamp || 0));
 
 // Stats
 const totalBySection: Record<string, number> = {};
