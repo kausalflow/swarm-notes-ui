@@ -18,8 +18,8 @@ export async function getStaticPaths() {
     if (parts.length > 1) sections.add(parts[0]);
   });
 
-  // Inject OKF nested entities as sections so their catalog pages are generated
-  ['concepts', 'datasets', 'open-questions'].forEach(s => sections.add(s));
+  // Inject standard sections so their catalog pages are generated even if empty
+  ['concepts', 'datasets', 'open-questions', 'papers', 'discussions'].forEach(s => sections.add(s));
 
   return Array.from(sections).map(section => ({
     params: { section },
