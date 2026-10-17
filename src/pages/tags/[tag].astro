@@ -10,7 +10,10 @@ export async function getStaticPaths() {
   // Get all unique tags from both blog and vault
   const blogTags = allPosts.map((post) => post.data.tags || []).flat();
   const vaultTags = allVaultEntries.map((entry) => (entry.data as any).tags || []).flat();
-  const uniqueTags = [...new Set([...blogTags, ...vaultTags])];
+  // Skip empty or non-string tags: an empty tag has no route and fails the build
+  const uniqueTags = [...new Set([...blogTags, ...vaultTags])].filter(
+    (tag) => typeof tag === "string" && tag.trim() !== ""
+  );
 
   // Return a path for each tag
   return uniqueTags.map((tag) => {

@@ -11,7 +11,9 @@ const allTags = [
   ...allPosts.map((post) => post.data.tags || []).flat(),
   ...allVaultEntries.map((entry) => (entry.data as any).tags || []).flat()
 ];
-const uniqueTags = [...new Set(allTags)];
+const uniqueTags = [...new Set(allTags)].filter(
+  (tag) => typeof tag === "string" && tag.trim() !== ""
+);
 
 // Create array with tag counts
 const tagsWithCounts = uniqueTags.map((tag) => ({

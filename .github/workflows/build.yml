@@ -1,0 +1,46 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Sites mount this repo as a submodule next to their vault/ folder,
+      # so reproduce that layout: ui/ beside a vault/ copied from fixtures.
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          path: ui
+
+      - name: Copy fixture vault
+        run: cp -r ui/fixtures/vault vault
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ui
+
+      - name: Build
+        run: npm run build
+        working-directory: ui
+
+      - name: Check vault pages were generated
+        run: |
+          for f in ../vault/papers/*.md; do
+            page="dist/papers/$(basename "$f" .md)/index.html"
+            test -f "$page" || { echo "Missing $page"; exit 1; }
+          done
+        working-directory: ui
